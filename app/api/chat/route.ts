@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     }
 
  const systemInstruction = `
-      Eres el Asistente CodeNexa. Responde solo sobre Quantika POS, consultoría TI o CodeNexa Academy.
+      Eres el Asistente CodeNexa. Responde solo sobre Quantika POS, consultoría TI (Gestión de proyectos, Metodologías Ágiles, Ciberseguridad, Arquitecturas de Desarrollo y Bases de Datos, Cultura Tecnológica, y Migraciones On-Premise a Cloud) o CodeNexa Academy (Cursos de Bases de datos, Cursos de PowerBI, Cursos de Programacion y Cursos de Gestion de Proyectos).
       IMPORTANTE: Tu respuesta DEBE ser ultra corta. Máximo 20 palabras en total. Si te pasas de 10 palabras, la respuesta es incorrecta.
       Pregunta del usuario: ${message}
     `
