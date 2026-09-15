@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 export default function CodeNexaHome() {
   const [formData, setFormData] = useState({ name: '', email: '', service: 'Quantika POS', message: '' })
@@ -12,6 +12,9 @@ export default function CodeNexaHome() {
   // Estado para la captura seleccionada en la galería interactiva de Quantika POS
   const [activeScreen, setActiveScreen] = useState(0)
 
+  // Estado para el Lightbox (imagen en grande)
+  const [modalImage, setModalImage] = useState<{ title: string; image: string } | null>(null)
+
   // Estados para el Asistente CodeNexa con IA
   const [chatOpen, setChatOpen] = useState(false)
   const [messages, setMessages] = useState([
@@ -19,6 +22,16 @@ export default function CodeNexaHome() {
   ])
   const [inputMessage, setInputMessage] = useState('')
   const [loadingChat, setLoadingChat] = useState(false)
+  
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages, loadingChat])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -101,14 +114,14 @@ export default function CodeNexaHome() {
       desc: "Lleva el control financiero de créditos pendientes con clientes (cuentas por cobrar) y compromisos de pago con proveedores (cuentas por pagar)."
     },
     {
-      icon: "💎",
-      title: "Top de Artículos y Rentabilidad",
-      desc: "Identifica instantáneamente los 5 productos más vendidos por volumen y los 5 artículos que generan mayor margen de ganancia neta para tu negocio."
+      icon: "📋",
+      title: "Cotizaciones y Proformas",
+      desc: "Creación de presupuestos con vigencia, re-impresión en PDF, búsqueda avanzada y carga directa al POS como contado o crédito."
     },
     {
-      icon: "🛡️",
-      title: "Seguridad y Roles por Usuario",
-      desc: "Gestión de permisos diferenciados para administradores, gerentes y cajeros respaldados por una arquitectura robusta en Supabase."
+      icon: "📅",
+      title: "Pedidos Especiales y Agenda",
+      desc: "Módulo de producción y bodega para manejar fechas de entrega, notas técnicas y estados de órdenes (pendientes o entregados)."
     }
   ]
 
@@ -156,7 +169,6 @@ export default function CodeNexaHome() {
     }
   ]
 
-  // Definición de las pantallas reales de Quantika POS para la galería interactiva
   const posScreens = [
     { title: "Punto de Venta Móvil", desc: "Interfaz táctil optimizada para cobros rápidos, categorías y control de stock.", image: "/image_8acd3d.jpg" },
     { title: "Pantalla de Acceso Seguro", desc: "Autenticación cifrada para usuarios y roles autorizados por sucursal.", image: "/image_8ac8c8.png" },
@@ -165,7 +177,16 @@ export default function CodeNexaHome() {
     { title: "Estadísticas y Reportes Financieros", desc: "Gráficos detallados de ventas mensuales y tendencias de ingresos.", image: "/image_8ac960.png" },
     { title: "Rendimiento y Métodos de Pago", desc: "Distribución de ingresos por efectivo, tarjeta, crédito, contado y mixto.", image: "/image_8ac97f.png" },
     { title: "Cuentas por Cobrar (Acreedores)", desc: "Control detallado de créditos de clientes, saldos pendientes y abonos.", image: "/image_8accc9.png" },
-    { title: "Cuentas por Payar (Proveedores)", desc: "Auditoría de deudas pendientes y compras de mercancía al crédito.", image: "/image_8acd01.png" }
+    { title: "Cuentas por Pagar (Proveedores)", desc: "Auditoría de deudas pendientes y compras de mercancía al crédito.", image: "/image_8acd01.png" },
+    { title: "Alertas de Stock Mínimo", desc: "Avisos visuales automáticos cuando los productos alcanzan existencias críticas.", image: "/pos_stock_bajo.png" },
+    { title: "Gestión de Cotizaciones", desc: "Control de proformas, búsqueda avanzada por cliente/NIT y re-impresión directa.", image: "/pos_gestion_cotizaciones.png" },
+    { title: "Vista Previa de Cotización PDF", desc: "Formato profesional impreso con datos de la empresa y validación de stock.", image: "/pos_cotizacion_pdf.png" },
+    { title: "Pedidos Especiales y Agenda", desc: "Módulo de producción y bodega para manejar fechas de entrega, notas y estados.", image: "/pos_pedidos_agenda.png" },
+    { title: "Administración de Inventario", desc: "Control de existencias por sucursal y visibilidad de movimientos de mercancía.", image: "/pos_inventario.png" },
+    { title: "Proveedores y Compras", desc: "Directorio corporativo, entradas de inventario y control de cuentas por pagar.", image: "/pos_compras_proveedores.png" },
+    { title: "Módulo de Clientes", desc: "Directorio completo de clientes, datos de contacto, historial de compras y saldos activos.", image: "/modulo_clientes.png" },
+    { title: "Módulo de Caja y Turnos", desc: "Control estricto de apertura, arqueo, ingresos, retiros y cierre de turnos de caja.", image: "/modulo_caja.png" },
+    { title: "Inventario en Red y Módulo de Traslados", desc: "Consulta en tiempo real de existencias en otras tiendas y gestión unificada de traslados.", image: "/modulo_traslados.png" }
   ]
 
   const faqs = [
@@ -186,27 +207,34 @@ export default function CodeNexaHome() {
       ]
     },
     {
-      q: "¿Cómo se calculan las analíticas financieras, márgenes y ticket promedio?",
+      q: "¿Cómo funcionan las alertas de stock crítico y mínimo?",
       steps: [
-        "El motor de analíticas procesa en tiempo real las ventas netas excluyendo estados pendientes o cancelados.",
-        "Calcula de forma automática el ticket promedio por transacción y el margen bruto estimado del negocio.",
-        "Genera una línea de tendencia mensual y desglosa los días de la semana con mayor volumen de ventas."
+        "El sistema detecta automáticamente cuando un producto baja del límite establecido.",
+        "Muestra una ventana emergente de advertencia para que puedas reabastecer a tiempo y evitar quiebres de inventario."
       ]
     },
     {
-      q: "¿Cómo se gestiona el inventario, stock crítico y los artículos más rentables?",
+      q: "¿Cómo se gestionan las cotizaciones y su carga directa al POS?",
       steps: [
-        "El sistema monitorea en tiempo real los niveles de existencia de cada producto por sucursal.",
-        "Identifica automáticamente los productos con stock crítico (menor o igual a 3 unidades) para alertar reabastecimientos.",
-        "Muestra el Top 5 de artículos más vendidos por cantidad y los 5 con mayor margen de ganancia."
+        "Permite crear proformas profesionales con datos del cliente, NIT y dirección.",
+        "Cuenta con historial para buscar por referencia y re-imprimir en PDF.",
+        "Permite cargar la cotización directamente al carrito del POS como venta al contado o crédito."
       ]
     },
     {
-      q: "¿Cómo maneja Quantika POS las cuentas por cobrar y cuentas por pagar?",
+      q: "¿Cómo opera el módulo de pedidos especiales y agenda?",
       steps: [
-        "Registra de manera automática las ventas a crédito o con saldos pendientes como cuentas por cobrar.",
-        "Lleva el control de las compras a proveedores y facturas pendientes en el módulo de cuentas por pagar.",
-        "Permite visualizar el estado financiero global de pasivos y créditos directamente desde el dashboard."
+        "Ideal para productos personalizados o servicios que requieren programación anticipada.",
+        "Registra notas técnicas específicas y asigna fecha y hora de entrega o evento.",
+        "Funciona como agenda permitiendo cambiar el estado entre pendiente e historial entregados."
+      ]
+    },
+    {
+      q: "¿Cómo se gestiona el inventario, compras y cuentas por pagar?",
+      steps: [
+        "Monitorea en tiempo real los niveles de existencia y alerta sobre stock crítico.",
+        "Incluye el módulo de proveedores para registrar entradas de mercancía y compras al crédito.",
+        "Lleva el control financiero de las cuentas por pagar a proveedores y el impacto en existencias."
       ]
     }
   ]
@@ -215,76 +243,76 @@ export default function CodeNexaHome() {
     <div className="min-h-screen bg-[#070b12] text-white flex flex-col font-sans notranslate selection:bg-cyan-500 selection:text-white" translate="no">
       
       {/* NAVBAR MODERNO */}
-      <header className="max-w-7xl mx-auto w-full p-4 md:px-8 flex justify-between items-center border-b border-slate-800/80 sticky top-0 bg-[#070b12]/90 backdrop-blur-md z-50">
-        <button 
-          onClick={scrollToTop}
-          className="flex items-center gap-3 cursor-pointer focus:outline-none group text-left"
-        >
-          <div className="relative w-10 h-10 rounded-xl overflow-hidden border border-cyan-500/40 group-hover:border-cyan-400 shadow-lg shadow-cyan-500/20 transition-all bg-[#0f172a]">
-            <img src="/CodeNexa Logo.webp" alt="CodeNexa Logo" className="w-full h-full object-cover" />
-          </div>
-          <div>
-            <span className="text-lg md:text-xl font-black tracking-wider text-white group-hover:opacity-90 transition-opacity">
-              CODE<span className="text-cyan-400">NEXA</span>
-            </span>
-            <span className="text-[10px] bg-cyan-500/20 text-cyan-400 px-1.5 py-0.5 rounded font-bold border border-cyan-500/30 ml-1.5">
-              .NET
-            </span>
-          </div>
-        </button>
+      <header className="max-w-7xl mx-auto w-full p-4 md:px-8 flex flex-col border-b border-slate-800/80 sticky top-0 bg-[#070b12]/95 backdrop-blur-md z-50">
+        <div className="flex justify-between items-center w-full">
+          <button 
+            onClick={scrollToTop}
+            className="flex items-center gap-3 cursor-pointer focus:outline-none group text-left"
+          >
+            <div className="relative w-10 h-10 rounded-xl overflow-hidden border border-cyan-500/40 group-hover:border-cyan-400 shadow-lg shadow-cyan-500/20 transition-all bg-[#0f172a]">
+              <img src="/CodeNexa Logo.webp" alt="CodeNexa Logo" className="w-full h-full object-cover" />
+            </div>
+            <div>
+              <span className="text-lg md:text-xl font-black tracking-wider text-white group-hover:opacity-90 transition-opacity">
+                CODE<span className="text-cyan-400">NEXA</span>
+              </span>
+              <span className="text-[10px] bg-cyan-500/20 text-cyan-400 px-1.5 py-0.5 rounded font-bold border border-cyan-500/30 ml-1.5">
+                .NET
+              </span>
+            </div>
+          </button>
 
-        <nav className="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-300 relative">
-          <div className="relative group" onMouseEnter={() => setDropdownOpen(true)} onMouseLeave={() => setDropdownOpen(false)}>
-            <button onClick={() => setDropdownOpen(!dropdownOpen)} className="flex items-center gap-1 hover:text-cyan-400 transition-colors py-2">
-              Quantika POS <span className="text-[10px]">▼</span>
-            </button>
-            {dropdownOpen && (
-              <div className="absolute top-full left-0 w-48 bg-[#111827] border border-slate-700/80 rounded-xl shadow-2xl py-2 flex flex-col z-50 backdrop-blur">
-                <a href="#caracteristicas" className="px-4 py-2 hover:bg-slate-800 hover:text-cyan-400 text-xs transition-colors">⚡ Características</a>
-                <a href="#ventajas" className="px-4 py-2 hover:bg-slate-800 hover:text-cyan-400 text-xs transition-colors">🎯 Ventajas</a>
-                <a href="#galeria" className="px-4 py-2 hover:bg-slate-800 hover:text-cyan-400 text-xs transition-colors">📱 Pantallas Reales</a>
-                <a href="#ayuda" className="px-4 py-2 hover:bg-slate-800 hover:text-cyan-400 text-xs transition-colors">📖 Guía Operativa</a>
-              </div>
-            )}
-          </div>
-          <a href="#consultoria" className="hover:text-cyan-400 transition-colors">Consultoría TI</a>
-          <a href="#academia" className="hover:text-cyan-400 transition-colors">CodeNexa Academy</a>
-          <a href="#contacto" className="hover:text-cyan-400 transition-colors">Contacto</a>
-        </nav>
+          <nav className="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-300 relative">
+            <div className="relative group" onMouseEnter={() => setDropdownOpen(true)} onMouseLeave={() => setDropdownOpen(false)}>
+              <button onClick={() => setDropdownOpen(!dropdownOpen)} className="flex items-center gap-1 hover:text-cyan-400 transition-colors py-2">
+                Quantika POS <span className="text-[10px]">▼</span>
+              </button>
+              {dropdownOpen && (
+                <div className="absolute top-full left-0 w-48 bg-[#111827] border border-slate-700/80 rounded-xl shadow-2xl py-2 flex flex-col z-50 backdrop-blur">
+                  <a href="#caracteristicas" className="px-4 py-2 hover:bg-slate-800 hover:text-cyan-400 text-xs transition-colors">⚡ Características</a>
+                  <a href="#ventajas" className="px-4 py-2 hover:bg-slate-800 hover:text-cyan-400 text-xs transition-colors">🎯 Ventajas</a>
+                  <a href="#galeria" className="px-4 py-2 hover:bg-slate-800 hover:text-cyan-400 text-xs transition-colors">📱 Pantallas Reales</a>
+                  <a href="#ayuda" className="px-4 py-2 hover:bg-slate-800 hover:text-cyan-400 text-xs transition-colors">📖 Guía Operativa</a>
+                </div>
+              )}
+            </div>
+            <a href="#consultoria" className="hover:text-cyan-400 transition-colors">Consultoría TI</a>
+            <a href="#academia" className="hover:text-cyan-400 transition-colors">CodeNexa Academy</a>
+            <a href="#contacto" className="hover:text-cyan-400 transition-colors">Contacto</a>
+          </nav>
 
-        <div className="hidden md:flex items-center gap-3">
-          <a href="#contacto" className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-lg shadow-cyan-600/25 transition-all transform hover:scale-105">
-            Cotizar Servicio
-          </a>
+          <div className="hidden md:flex items-center gap-3">
+            <a href="#contacto" className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-lg shadow-cyan-600/25 transition-all transform hover:scale-105">
+              Cotizar Servicio
+            </a>
+          </div>
+
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 rounded-lg bg-slate-900 text-cyan-400 border border-slate-800 text-lg font-bold" aria-label="Menú">
+            {mobileMenuOpen ? '✕' : '☰'}
+          </button>
         </div>
 
-        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 rounded-lg bg-slate-900 text-cyan-400 border border-slate-800 text-lg font-bold" aria-label="Menú">
-          {mobileMenuOpen ? '✕' : '☰'}
-        </button>
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-[#111827] border-t border-slate-800/80 mt-3 pt-3 pb-2 flex flex-col space-y-3 text-xs font-bold animate-fadeIn w-full">
+            <div className="text-cyan-400 font-extrabold pb-1 border-b border-slate-800">Quantika POS</div>
+            <a href="#caracteristicas" onClick={() => setMobileMenuOpen(false)} className="text-slate-300 hover:text-cyan-400 pl-3 py-1">⚡ Características</a>
+            <a href="#ventajas" onClick={() => setMobileMenuOpen(false)} className="text-slate-300 hover:text-cyan-400 pl-3 py-1">🎯 Ventajas</a>
+            <a href="#galeria" onClick={() => setMobileMenuOpen(false)} className="text-slate-300 hover:text-cyan-400 pl-3 py-1">📱 Pantallas Reales</a>
+            <a href="#ayuda" onClick={() => setMobileMenuOpen(false)} className="text-slate-300 hover:text-cyan-400 pl-3 py-1">📖 Guía Operativa</a>
+            <div className="pt-2 border-t border-slate-800 space-y-3">
+              <a href="#consultoria" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 block py-1">🛡️ Consultoría TI</a>
+              <a href="#academia" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 block py-1">🎓 CodeNexa Academy</a>
+              <a href="#contacto" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 block py-1">✉️ Contacto</a>
+              <a href="#contacto" onClick={() => setMobileMenuOpen(false)} className="bg-cyan-600 text-white text-center block py-2.5 rounded-xl shadow mt-2">Cotizar Servicio</a>
+            </div>
+          </div>
+        )}
       </header>
-
-      {/* Menú Móvil */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-[#111827] border-b border-slate-800 p-5 flex flex-col space-y-3 text-xs font-bold animate-fadeIn z-40">
-          <div className="text-cyan-400 font-extrabold pb-1 border-b border-slate-800">Quantika POS</div>
-          <a href="#caracteristicas" onClick={() => setMobileMenuOpen(false)} className="text-slate-300 hover:text-cyan-400 pl-3 py-1">⚡ Características</a>
-          <a href="#ventajas" onClick={() => setMobileMenuOpen(false)} className="text-slate-300 hover:text-cyan-400 pl-3 py-1">🎯 Ventajas</a>
-          <a href="#galeria" onClick={() => setMobileMenuOpen(false)} className="text-slate-300 hover:text-cyan-400 pl-3 py-1">📱 Pantallas Reales</a>
-          <a href="#ayuda" onClick={() => setMobileMenuOpen(false)} className="text-slate-300 hover:text-cyan-400 pl-3 py-1">📖 Guía Operativa</a>
-          <div className="pt-2 border-t border-slate-800 space-y-3">
-            <a href="#consultoria" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 block py-1">🛡️ Consultoría TI</a>
-            <a href="#academia" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 block py-1">🎓 CodeNexa Academy</a>
-            <a href="#contacto" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 block py-1">✉️ Contacto</a>
-            <a href="#contacto" onClick={() => setMobileMenuOpen(false)} className="bg-cyan-600 text-white text-center block py-2.5 rounded-xl shadow mt-2">Cotizar Servicio</a>
-          </div>
-        </div>
-      )}
 
       {/* HERO SECTION */}
       <section className="relative max-w-6xl mx-auto w-full px-4 sm:px-6 py-12 md:py-16 text-center flex flex-col items-center overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[700px] md:h-[700px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-        {/* Logotipo Grande y Ejecutivo con Glow */}
         <div className="relative mb-6 group">
           <div className="absolute -inset-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-3xl blur-2xl opacity-50 group-hover:opacity-80 transition duration-1000"></div>
           <div className="relative w-36 h-36 md:w-48 md:h-48 bg-[#0f172a] border border-cyan-500/40 rounded-3xl overflow-hidden shadow-2xl p-2.5">
@@ -292,21 +320,20 @@ export default function CodeNexaHome() {
           </div>
         </div>
 
-        {/* BARRA DE PILARES CLAVE MODERNA */}
         <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-6 relative z-10 max-w-4xl">
-          <span className="bg-cyan-500/10 text-cyan-400 text-[11px] font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-cyan-500/30 backdrop-blur-sm shadow-sm">
+          <span className="bg-cyan-500/10 text-cyan-400 text-[11px] font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-lg backdrop-blur-sm">
             🛠️ Herramientas
           </span>
-          <span className="bg-blue-500/10 text-blue-400 text-[11px] font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-blue-500/30 backdrop-blur-sm shadow-sm">
+          <span className="bg-blue-500/10 text-blue-400 text-[11px] font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-lg backdrop-blur-sm">
             💼 Consultorías
           </span>
-          <span className="bg-purple-500/10 text-purple-400 text-[11px] font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-purple-500/30 backdrop-blur-sm shadow-sm">
+          <span className="bg-purple-500/10 text-purple-400 text-[11px] font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-lg backdrop-blur-sm">
             🎓 Capacitaciones
           </span>
-          <span className="bg-emerald-500/10 text-emerald-400 text-[11px] font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-emerald-500/30 backdrop-blur-sm shadow-sm">
+          <span className="bg-emerald-500/10 text-emerald-400 text-[11px] font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-lg backdrop-blur-sm">
             🛡️ Ciberseguridad
           </span>
-          <span className="bg-amber-500/10 text-amber-400 text-[11px] font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-amber-500/30 backdrop-blur-sm shadow-sm">
+          <span className="bg-amber-500/10 text-amber-400 text-[11px] font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-lg backdrop-blur-sm">
             💻 Modernizaciones Tecnológicas
           </span>
         </div>
@@ -318,7 +345,6 @@ export default function CodeNexaHome() {
           Soluciones tecnológicas corporativas con Quantika POS, arquitectura de bases de datos de misión crítica, hardening de seguridad y formación técnica especializada.
         </p>
 
-        {/* BANNER DE ALTO IMPACTO: QUANTIKA POS */}
         <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-4 relative z-10">
           <div className="relative rounded-3xl overflow-hidden border border-cyan-500/40 bg-gradient-to-r from-cyan-950 via-slate-900 to-blue-950 p-8 md:p-12 shadow-2xl text-left">
             <div className="absolute top-0 right-0 -mt-12 -mr-12 w-80 h-80 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none"></div>
@@ -352,7 +378,6 @@ export default function CodeNexaHome() {
             </div>
           </div>
         </div>
-
       </section>
 
       {/* SECCIÓN 1: PRODUCTOS (QUANTIKA POS EN IPHONE SIMULATOR) */}
@@ -377,25 +402,18 @@ export default function CodeNexaHome() {
             </div>
           </div>
           
-          {/* MOCKUP REALISTA DE IPHONE MOSTRANDO QUANTIKA POS */}
           <div className="w-full lg:w-auto flex justify-center relative z-10">
             <div className="relative w-[280px] sm:w-[310px] h-[580px] bg-[#1e293b] rounded-[45px] p-3 shadow-2xl border-4 border-slate-700 ring-8 ring-slate-900/50">
-              
-              {/* Botones laterales simulados */}
               <div className="absolute -left-[7px] top-24 w-[3px] h-10 bg-slate-600 rounded-l"></div>
               <div className="absolute -left-[7px] top-38 w-[3px] h-12 bg-slate-600 rounded-l"></div>
               <div className="absolute -right-[7px] top-28 w-[3px] h-14 bg-slate-600 rounded-r"></div>
 
-              {/* Pantalla interna del iPhone */}
               <div className="w-full h-full bg-[#070b12] rounded-[35px] overflow-hidden flex flex-col border border-slate-800 relative shadow-inner">
-                
-                {/* Notch / Dynamic Island */}
                 <div className="absolute top-2 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-full z-30 flex items-center justify-center">
                   <div className="w-3 h-3 bg-slate-900 rounded-full mr-3 border border-slate-800"></div>
                   <div className="w-2 h-2 bg-blue-950 rounded-full"></div>
                 </div>
 
-                {/* Barra de estado móvil */}
                 <div className="pt-3 px-6 flex justify-between items-center text-[10px] font-bold text-slate-300 bg-[#070b12] z-20">
                   <span>9:41</span>
                   <div className="flex items-center gap-1.5">
@@ -406,25 +424,23 @@ export default function CodeNexaHome() {
                   </div>
                 </div>
 
-                {/* Imagen real dentro del emulador de iPhone */}
-                <div className="flex-1 overflow-hidden relative bg-black flex items-center justify-center">
-                  <img 
-                    src={posScreens[activeScreen].image} 
-                    alt={posScreens[activeScreen].title} 
-                    className="w-full h-full object-cover object-top"
-                  />
+                <div 
+                  className="flex-1 overflow-hidden relative bg-black flex items-center justify-center cursor-pointer group"
+                  onClick={() => setModalImage({ title: posScreens[activeScreen].title, image: posScreens[activeScreen].image })}
+                  title="Haz clic para ver en grande"
+                >
+                  <img src={posScreens[activeScreen].image} alt={posScreens[activeScreen].title} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform" />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold gap-1.5">
+                    🔍 Ampliar Pantalla
+                  </div>
                 </div>
 
-                {/* Barra inferior de navegación del iPhone */}
                 <div className="h-5 bg-[#070b12] flex items-center justify-center pb-1">
                   <div className="w-24 h-1 bg-slate-700 rounded-full"></div>
                 </div>
-
               </div>
-
             </div>
           </div>
-
         </div>
       </section>
 
@@ -433,10 +449,9 @@ export default function CodeNexaHome() {
         <div className="text-center max-w-3xl mx-auto mb-12">
           <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-4 py-1.5 rounded-full border border-cyan-500/20 inline-block mb-3">Interfaces Reales</span>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-white mb-3">Explora el Sistema por Dentro</h2>
-          <p className="text-slate-400 text-xs sm:text-sm">Haz clic en cada módulo para visualizar las pantallas reales de operación, reportes y administración de Quantika POS.</p>
+          <p className="text-slate-400 text-xs sm:text-sm">Haz clic en cada módulo o sobre la imagen para abrirla en grande y visualizar todos los detalles de operación.</p>
         </div>
 
-        {/* Selector de pantallas */}
         <div className="flex flex-wrap justify-center gap-2 mb-8">
           {posScreens.map((screen, idx) => (
             <button
@@ -449,30 +464,84 @@ export default function CodeNexaHome() {
           ))}
         </div>
 
-        {/* Visualizador de pantalla activa */}
         <div className="bg-[#111827] border border-slate-800 rounded-3xl p-6 md:p-10 shadow-2xl max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-8">
           <div className="w-full md:w-1/2 text-left space-y-4">
             <span className="text-[10px] bg-cyan-500/20 text-cyan-400 px-3 py-1 rounded-full font-extrabold uppercase border border-cyan-500/30">Módulo #{activeScreen + 1}</span>
             <h3 className="text-xl sm:text-2xl font-black text-white">{posScreens[activeScreen].title}</h3>
             <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">{posScreens[activeScreen].desc}</p>
-            <div className="pt-4">
-              <a href="#contacto" className="inline-block bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-cyan-600/20 transition-all">
-                Solicitar Acceso o Demo
+            <div className="pt-4 flex flex-wrap gap-3">
+              <button 
+                onClick={() => setModalImage({ title: posScreens[activeScreen].title, image: posScreens[activeScreen].image })}
+                className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-5 py-3 rounded-xl text-xs uppercase tracking-wider shadow-lg transition-all flex items-center gap-2"
+              >
+                🔍 Ver Imagen en Grande
+              </button>
+              <a href="#contacto" className="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 font-bold px-5 py-3 rounded-xl text-xs uppercase tracking-wider transition-all">
+                Solicitar Demo
               </a>
             </div>
           </div>
 
-          <div className="w-full md:w-1/2 bg-[#070b12] border border-slate-700/80 rounded-2xl p-3 shadow-2xl overflow-hidden group">
+          <div 
+            className="w-full md:w-1/2 bg-[#070b12] border border-slate-700/80 rounded-2xl p-3 shadow-2xl overflow-hidden group cursor-pointer relative"
+            onClick={() => setModalImage({ title: posScreens[activeScreen].title, image: posScreens[activeScreen].image })}
+            title="Haz clic para ampliar"
+          >
             <div className="rounded-xl overflow-hidden border border-slate-800 bg-slate-900 aspect-[4/3] relative flex items-center justify-center">
-              <img 
-                src={posScreens[activeScreen].image} 
-                alt={posScreens[activeScreen].title} 
-                className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" 
-              />
+              <img src={posScreens[activeScreen].image} alt={posScreens[activeScreen].title} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white font-bold text-xs gap-1">
+                <span className="text-2xl">🔍</span>
+                <span>Ampliar Pantalla</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* MODAL / LIGHTBOX PARA VER IMAGEN EN GRANDE */}
+      {modalImage && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4 sm:p-6 animate-fadeIn"
+          onClick={() => setModalImage(null)}
+        >
+          <div 
+            className="relative max-w-5xl w-full bg-[#111827] border border-slate-700 rounded-3xl overflow-hidden shadow-2xl flex flex-col"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="bg-[#070b12] px-6 py-4 border-b border-slate-800 flex justify-between items-center">
+              <div>
+                <span className="text-[10px] text-cyan-400 font-extrabold uppercase tracking-widest block">Quantika POS • Vista Detallada</span>
+                <h3 className="text-sm sm:text-lg font-black text-white">{modalImage.title}</h3>
+              </div>
+              <button 
+                onClick={() => setModalImage(null)}
+                className="bg-slate-800 hover:bg-slate-700 text-white w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm transition-colors"
+                aria-label="Cerrar"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-2 sm:p-4 bg-black/60 flex items-center justify-center max-h-[75vh] overflow-auto">
+              <img 
+                src={modalImage.image} 
+                alt={modalImage.title} 
+                className="max-w-full max-h-[70vh] object-contain rounded-xl border border-slate-800 shadow-2xl" 
+              />
+            </div>
+
+            <div className="bg-[#070b12] px-6 py-3 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
+              <span>Haz clic fuera de la ventana o en el botón para cerrar.</span>
+              <button 
+                onClick={() => setModalImage(null)}
+                className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-4 py-2 rounded-xl text-xs uppercase"
+              >
+                Cerrar Ventana
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* SECCIÓN: CARACTERÍSTICAS PRINCIPALES */}
       <section id="caracteristicas" className="max-w-7xl mx-auto w-full px-4 sm:px-6 py-16 md:py-24 border-t border-slate-800/80">
@@ -580,7 +649,7 @@ export default function CodeNexaHome() {
         </div>
       </section>
 
-      {/* SECCIÓN NUEVA: CODENEXA ACADEMY (MIGRADA DESDE GOOGLE SITES) */}
+      {/* SECCIÓN NUEVA: CODENEXA ACADEMY */}
       <section id="academia" className="max-w-7xl mx-auto w-full px-4 sm:px-6 py-16 md:py-28 border-t border-slate-800/80">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="bg-purple-500/10 text-purple-400 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full border border-purple-500/20 mb-4 inline-block shadow-sm">
@@ -594,7 +663,6 @@ export default function CodeNexaHome() {
           </p>
         </div>
 
-        {/* DETALLES DEL PROGRAMA Y PAGO */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 bg-gradient-to-br from-[#111827] to-[#0f172a] border border-slate-700/80 p-6 sm:p-10 rounded-3xl shadow-2xl">
           <div>
             <h3 className="text-sm font-bold text-cyan-400 uppercase tracking-wider mb-4 flex items-center gap-2">
@@ -621,10 +689,7 @@ export default function CodeNexaHome() {
           </div>
         </div>
 
-        {/* NIVELES DE ESTUDIO (MÓDULOS) */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-          
-          {/* NIVEL BÁSICO */}
           <div className="bg-[#111827] border border-emerald-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col justify-between group hover:border-emerald-400 transition-all">
             <div>
               <div className="flex items-center justify-between mb-4">
@@ -650,7 +715,6 @@ export default function CodeNexaHome() {
             </div>
           </div>
 
-          {/* NIVEL INTERMEDIO */}
           <div className="bg-[#111827] border border-amber-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col justify-between group hover:border-amber-400 transition-all">
             <div>
               <div className="flex items-center justify-between mb-4">
@@ -676,7 +740,6 @@ export default function CodeNexaHome() {
             </div>
           </div>
 
-          {/* NIVEL AVANZADO */}
           <div className="bg-[#111827] border border-purple-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col justify-between group hover:border-purple-400 transition-all">
             <div>
               <div className="flex items-center justify-between mb-4">
@@ -701,10 +764,8 @@ export default function CodeNexaHome() {
               </a>
             </div>
           </div>
-
         </div>
 
-        {/* PERFIL DEL INSTRUCTOR Y A QUIÉN VA DIRIGIDO */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-[#0d1322] border border-slate-800 p-6 sm:p-10 rounded-3xl shadow-xl">
           <div>
             <h3 className="text-sm font-bold text-cyan-400 uppercase tracking-wider mb-3 flex items-center gap-2">👨‍🏫 Sobre el Instructor</h3>
@@ -729,7 +790,6 @@ export default function CodeNexaHome() {
             </div>
           </div>
         </div>
-
       </section>
 
       {/* SECCIÓN DE CONTACTO GENERAL */}
@@ -858,6 +918,7 @@ export default function CodeNexaHome() {
                   </div>
                 </div>
               )}
+              <div ref={messagesEndRef} />
             </div>
 
             <form onSubmit={handleSendMessage} className="p-3 bg-[#070b12] border-t border-slate-800 flex gap-2">
