@@ -296,10 +296,29 @@ export default function CodeNexaHome() {
             <a href="#contacto" className="bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-xl">Cotizar</a>
           </nav>
 
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 text-cyan-400 text-lg font-bold">☰</button>
+          {/* Botón hamburguesa optimizado para touch en móviles */}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+            className="md:hidden p-3 rounded-xl bg-slate-900/80 text-cyan-400 border border-slate-800 text-xl font-bold focus:outline-none"
+            aria-label="Menú de navegación"
+          >
+            {mobileMenuOpen ? '✕' : '☰'}
+          </button>
         </div>
-      </header>
 
+        {/* Menú Desplegable Móvil Corregido */}
+        {mobileMenuOpen && (
+          <div className="md:hidden absolute top-full left-0 w-full bg-[#0d1322] border-b border-slate-800 p-5 flex flex-col space-y-4 text-xs font-bold shadow-2xl backdrop-blur-xl animate-fadeIn z-50">
+            <a href="#teaser" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-1 border-b border-slate-800/60">🎬 Spot Animado con Voz</a>
+            <a href="#galeria" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-1 border-b border-slate-800/60">📱 Pantallas Reales de Quantika POS</a>
+            <a href="#caracteristicas" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-1 border-b border-slate-800/60">⚡ Características Operativas</a>
+            <a href="#consultoria" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-1 border-b border-slate-800/60">💼 Consultoría TI y Ciberseguridad</a>
+            <a href="#academia" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-1 border-b border-slate-800/60">🎓 CodeNexa Academy</a>
+            <a href="#contacto" onClick={() => setMobileMenuOpen(false)} className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white text-center py-3 rounded-xl shadow-lg mt-2">✉️ Cotizar Servicio / Demo</a>
+          </div>
+        )}
+      </header>
+      
       {/* HERO SECTION */}
       <section className="max-w-6xl mx-auto px-4 py-12 text-center flex flex-col items-center">
         <span className="bg-cyan-500/10 text-cyan-400 text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-cyan-500/20 mb-4">
