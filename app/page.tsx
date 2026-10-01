@@ -7,6 +7,9 @@ export default function CodeNexaHome() {
   const [sent, setSent] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   
+  // Estado para el Carrusel / Banner Animado de Herramientas Principales
+  const [activeToolSlide, setActiveToolSlide] = useState(0)
+  
   // Estado para la captura seleccionada en la galería interactiva de Quantika POS
   const [activeScreen, setActiveScreen] = useState(0)
 
@@ -31,6 +34,37 @@ export default function CodeNexaHome() {
   const [teaserPlaying, setTeaserPlaying] = useState(true)
   const [teaserProgress, setTeaserProgress] = useState(0)
   const [isMuted, setIsMuted] = useState(false)
+
+  // Las 3 Herramientas Principales a la Venta para el Carrusel / Banner Superior
+  const coreToolsSlides = [
+    {
+      badge: "SISTEMA FLAGSHIP",
+      title: "QuantikaPOS",
+      subtitle: "Sistema de Gestión Empresarial Integral",
+      desc: "Inventario, control de caja, gestión de clientes, cuentas por pagar/cobrar, cotizaciones profesionales, control de mesas para restaurantes, control multi-sucursal, traslados y ventas ultrarrápidas.",
+      ctaText: "Cotizar QuantikaPOS",
+      image: "/image_8acc6b.png",
+      accent: "from-cyan-600/30 to-blue-600/20 border-cyan-500/50 text-cyan-400"
+    },
+    {
+      badge: "EDICIÓN FITNESS",
+      title: "QuantikaPOS • Gimnasios",
+      subtitle: "Control Total y Salud Metabólica",
+      desc: "Inscripciones con vigencias, control de acceso por código QR, control clínico de nutrición y antropometría con cálculo de edad metabólica y guías de porciones, control de invitados de cortesía y clases recurrentes.",
+      ctaText: "Ver Módulos de Gimnasio",
+      image: "/image_b3a918.png",
+      accent: "from-purple-600/30 to-indigo-600/20 border-purple-500/50 text-purple-400"
+    },
+    {
+      badge: "VITRINA COMERCIAL",
+      title: "MarketGuate.net",
+      subtitle: "Plataforma de E-commerce y Directorio",
+      desc: "El espacio digital exclusivo para posicionar y difundir los productos y servicios de tu negocio en toda Guatemala, integrado como Bono Plus con nuestras soluciones corporativas.",
+      ctaText: "Visitar MarketGuate",
+      image: "/image_marketguate.png",
+      accent: "from-emerald-600/30 to-teal-600/20 border-emerald-500/50 text-emerald-400"
+    }
+  ]
 
   const teaserScenesList = [
     {
@@ -81,6 +115,14 @@ export default function CodeNexaHome() {
       window.speechSynthesis.speak(utterance)
     }, 145)
   }
+
+  // Auto-rotación para el Carrusel / Banner de las 3 herramientas principales
+  useEffect(() => {
+    const toolTimer = setInterval(() => {
+      setActiveToolSlide(prev => (prev + 1) % coreToolsSlides.length)
+    }, 6000)
+    return () => clearInterval(toolTimer)
+  }, [])
 
   useEffect(() => {
     if (!teaserPlaying) return
@@ -170,7 +212,7 @@ export default function CodeNexaHome() {
   ]
 
   const consultingCatalog = [
-    { icon: "☁️", title: "Migraciones On-Premise a Cloud", desc: "Estrategias de transición seguras hacia infraestructuras en la nube, optimizando costos y disponibilidad." },
+    { icon: "☁️️", title: "Migraciones On-Premise a Cloud", desc: "Estrategias de transición seguras hacia infraestructuras en la nube, optimizando costos y disponibilidad." },
     { icon: "🛡️", title: "Ciberseguridad & Hardening", desc: "Auditorías de infraestructura, endurecimiento de servidores, pentesting y protección de APIs corporativas." },
     { icon: "🗄️", title: "Arquitecturas y Bases de Datos", desc: "Diseño y optimización de motores de misión crítica (SQL Server, MongoDB, PostgreSQL) de alto rendimiento." },
     { icon: "📈", title: "Gestión de Proyectos TI", desc: "Dirección técnica y administrativa bajo estándares rigurosos de control y mitigación de riesgos." },
@@ -257,9 +299,12 @@ export default function CodeNexaHome() {
           </button>
 
           <nav className="hidden lg:flex items-center gap-3 text-xs font-semibold text-slate-300">
+            <a href="#herramientas" className="hover:text-cyan-400 transition-colors font-bold text-cyan-300">Sistemas</a>
+            <a href="#sistema-quantikapos" className="hover:text-cyan-400 transition-colors">Empresa</a>
+            <a href="#sistema-gimnasios" className="hover:text-cyan-400 transition-colors">Gimnasios</a>
+            <a href="#sistema-marketguate" className="hover:text-cyan-400 transition-colors">MarketGuate</a>
             <a href="#teaser" className="hover:text-cyan-400 transition-colors">Spot</a>
             <a href="#galeria" className="hover:text-cyan-400 transition-colors">POS</a>
-            <a href="#marketguate" className="hover:text-cyan-400 transition-colors font-bold text-cyan-300">MarketGuate</a>
             <a href="#consultoria" className="hover:text-cyan-400 transition-colors">Consultoría</a>
             <a href="#academia" className="hover:text-cyan-400 transition-colors font-bold text-purple-300">Academy</a>
             <a href="#testimonios" className="hover:text-cyan-400 transition-colors">Testimonios</a>
@@ -324,9 +369,12 @@ export default function CodeNexaHome() {
       {/* MENÚ MÓVIL DESPLEGABLE */}
       {mobileMenuOpen && (
         <div className="lg:hidden fixed top-[73px] left-0 w-full bg-[#070b12]/95 border-b border-slate-800 p-6 flex flex-col space-y-4 text-xs font-bold shadow-2xl backdrop-blur-2xl z-40 animate-fadeIn">
+          <a href="#herramientas" onClick={() => setMobileMenuOpen(false)} className="text-cyan-300 hover:text-cyan-400 py-2 border-b border-slate-800/60">🚀 Sistemas Principales</a>
+          <a href="#sistema-quantikapos" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-2 border-b border-slate-800/60">💼 QuantikaPOS Empresarial</a>
+          <a href="#sistema-gimnasios" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-2 border-b border-slate-800/60">🏋️ QuantikaPOS Gimnasios</a>
+          <a href="#sistema-marketguate" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-2 border-b border-slate-800/60">🛒 MarketGuate.net</a>
           <a href="#teaser" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-2 border-b border-slate-800/60">🎬 Spot Animado con Voz</a>
           <a href="#galeria" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-2 border-b border-slate-800/60">📱 Pantallas Reales de Quantika POS</a>
-          <a href="#marketguate" onClick={() => setMobileMenuOpen(false)} className="text-cyan-300 hover:text-cyan-400 py-2 border-b border-slate-800/60">🛒 Tienda MarketGuate.net</a>
           <a href="#consultoria" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-2 border-b border-slate-800/60">💼 Consultoría TI y Ciberseguridad</a>
           <a href="#academia" onClick={() => setMobileMenuOpen(false)} className="text-purple-300 hover:text-purple-400 py-2 border-b border-slate-800/60">🎓 CodeNexa Academy</a>
           <a href="#testimonios" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-2 border-b border-slate-800/60">⭐ Testimonios</a>
@@ -379,27 +427,257 @@ export default function CodeNexaHome() {
       )}
       
       {/* HERO SECTION */}
-      <section className="max-w-5xl mx-auto px-4 pt-32 pb-12 text-center flex flex-col items-center relative z-10">
+      <section className="max-w-5xl mx-auto px-4 pt-32 pb-8 text-center flex flex-col items-center relative z-10">
         <h1 className="text-4xl sm:text-6xl font-black tracking-tight mb-6 leading-tight">
           Modernización Tecnológica, <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-400">Consultoría</span> y <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400">Capacitación</span>
         </h1>
         
-        <p className="text-slate-400 text-sm sm:text-base max-w-2xl mb-10 leading-relaxed">
+        <p className="text-slate-400 text-sm sm:text-base max-w-2xl mb-8 leading-relaxed">
           Soluciones corporativas de misión crítica con Quantika POS, arquitectura de bases de datos robustas, hardening de seguridad avanzada y formación técnica especializada.
         </p>
+      </section>
 
-        <div className="flex flex-wrap justify-center gap-4">
-          <a href="#teaser" className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold px-6 py-3.5 rounded-2xl text-xs sm:text-sm uppercase tracking-wider shadow-xl shadow-cyan-600/30 transition-all flex items-center gap-2">
-            <span>🎬</span> Ver Spot Interactivo
-          </a>
-          <a href="#academia" className="bg-slate-900 hover:bg-slate-800 text-purple-300 font-bold px-6 py-3.5 rounded-2xl text-xs sm:text-sm uppercase tracking-wider border border-purple-500/40 transition-all shadow-lg">
-            🎓 Ver Cursos Academy
-          </a>
+      {/* BANNER / CARRUSEL ANIMADO CON LAS 3 HERRAMIENTAS PRINCIPALES A LA VENTA */}
+      <section id="herramientas" className="max-w-6xl mx-auto w-full px-4 py-6 relative z-10 scroll-mt-28">
+        <div className="text-center max-w-2xl mx-auto mb-6">
+          <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-4 py-1.5 rounded-full border border-cyan-500/20 inline-block mb-2 shadow-sm">
+            🚀 Soluciones Destacadas a la Venta
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-black text-white">Nuestras Herramientas Principales</h2>
+        </div>
+
+        <div className="bg-[#0b101d] border border-slate-700/80 rounded-3xl overflow-hidden shadow-2xl p-6 sm:p-10 backdrop-blur-2xl relative">
+          
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 min-h-[360px]">
+            
+            <div className="w-full lg:w-1/2 space-y-4 text-left">
+              <span className="inline-block text-[10px] font-black uppercase tracking-widest px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-700 text-cyan-400 shadow">
+                ★ {coreToolsSlides[activeToolSlide].badge}
+              </span>
+              <h3 className="text-2xl sm:text-4xl font-black text-white leading-tight">
+                {coreToolsSlides[activeToolSlide].title}
+              </h3>
+              <h4 className="text-sm font-bold text-cyan-300">
+                {coreToolsSlides[activeToolSlide].subtitle}
+              </h4>
+              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                {coreToolsSlides[activeToolSlide].desc}
+              </p>
+              
+              <div className="pt-2 flex flex-wrap items-center gap-4">
+                <a 
+                  href="#contacto" 
+                  onClick={() => setFormData(prev => ({ ...prev, service: coreToolsSlides[activeToolSlide].title }))}
+                  className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold px-6 py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-cyan-600/30 transition-all"
+                >
+                  ✉️ {coreToolsSlides[activeToolSlide].ctaText}
+                </a>
+              </div>
+            </div>
+
+            <div className="w-full lg:w-1/2 flex items-center justify-center">
+              <div 
+                className="relative rounded-2xl overflow-hidden border border-slate-700/80 bg-slate-900 shadow-2xl group max-w-md aspect-[16/10] w-full flex items-center justify-center p-1 cursor-pointer"
+                onClick={() => setModalImage({ title: coreToolsSlides[activeToolSlide].title, image: coreToolsSlides[activeToolSlide].image })}
+              >
+                <img src={coreToolsSlides[activeToolSlide].image} alt={coreToolsSlides[activeToolSlide].title} className="w-full h-full object-cover object-top rounded-xl transform group-hover:scale-105 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold backdrop-blur-xs">
+                  🔍 Clic para ampliar imagen
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Controles de Navegación del Carrusel / PUNTOS */}
+          <div className="flex items-center justify-center gap-3 mt-8 pt-6 border-t border-slate-800">
+            {coreToolsSlides.map((tool, idx) => (
+              <button
+                key={idx}
+                onClick={() => setActiveToolSlide(idx)}
+                className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all border flex items-center gap-2 ${activeToolSlide === idx ? 'bg-cyan-600 text-white border-cyan-400 shadow-lg shadow-cyan-600/40 scale-105' : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'}`}
+              >
+                <span>{idx === 0 ? '💼' : idx === 1 ? '🏋️' : '🛒'}</span>
+                <span>{tool.title}</span>
+              </button>
+            ))}
+          </div>
+
         </div>
       </section>
 
-      {/* BARRA DE STACK TECNOLÓGICO Y SEGURIDAD (NUEVO) */}
+      {/* SECCIÓN DETALLADA 1: QUANTIKAPOS EMPRESARIAL */}
+      <section id="sistema-quantikapos" className="max-w-7xl mx-auto w-full px-4 py-16 border-t border-slate-800/80 relative z-10 scroll-mt-28">
+        <div className="bg-gradient-to-br from-[#0b101d] via-[#10192e] to-[#030712] border border-cyan-500/30 rounded-3xl p-6 sm:p-12 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 blur-[130px] rounded-full pointer-events-none"></div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center relative z-10">
+            <div className="space-y-6 text-left">
+              <span className="bg-cyan-500/20 text-cyan-400 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full border border-cyan-500/30 inline-block shadow">
+                💼 Solución Flagship
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-black text-white leading-tight">
+                QuantikaPOS <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">Gestión Empresarial Integral</span>
+              </h2>
+              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                El sistema de punto de venta y administración más robusto del mercado guatemalteco. Diseñado para optimizar cada área de tu negocio con herramientas de control total:
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300 pt-2">
+                <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <span className="text-cyan-400 font-bold">✓</span> Inventario y Stock Crítico
+                </div>
+                <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <span className="text-cyan-400 font-bold">✓</span> Control de Caja y Turnos
+                </div>
+                <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <span className="text-cyan-400 font-bold">✓</span> Cuentas por Pagar y Cobrar
+                </div>
+                <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <span className="text-cyan-400 font-bold">✓</span> Cotizaciones Profesionales PDF
+                </div>
+                <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <span className="text-cyan-400 font-bold">✓</span> Control de Mesas (Restaurantes)
+                </div>
+                <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <span className="text-cyan-400 font-bold">✓</span> Traslados Multi-Sucursal
+                </div>
+              </div>
+
+              <div className="pt-4">
+                <a 
+                  href="#contacto" 
+                  onClick={() => setFormData(prev => ({ ...prev, service: 'Quantika POS' }))}
+                  className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold px-6 py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-cyan-600/30 transition-all inline-block"
+                >
+                  Cotizar QuantikaPOS Empresarial →
+                </a>
+              </div>
+            </div>
+
+            <div className="relative rounded-2xl overflow-hidden border border-slate-700/80 bg-slate-900 shadow-2xl aspect-[4/3] flex items-center justify-center p-1 group">
+              <img src="/image_8acc6b.png" alt="QuantikaPOS Empresarial" className="w-full h-full object-cover object-top rounded-xl group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECCIÓN DETALLADA 2: QUANTIKAPOS GIMNASIOS */}
+      <section id="sistema-gimnasios" className="max-w-7xl mx-auto w-full px-4 py-16 border-t border-slate-800/80 relative z-10 scroll-mt-28">
+        <div className="bg-gradient-to-br from-[#0b101d] via-[#17102e] to-[#030712] border border-purple-500/30 rounded-3xl p-6 sm:p-12 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 blur-[130px] rounded-full pointer-events-none"></div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center relative z-10">
+            <div className="order-2 lg:order-1 relative rounded-2xl overflow-hidden border border-slate-700/80 bg-slate-900 shadow-2xl aspect-[4/3] flex items-center justify-center p-1 group">
+              <img src="/image_b3a918.png" alt="QuantikaPOS Gimnasios" className="w-full h-full object-cover object-top rounded-xl group-hover:scale-105 transition-transform duration-700" />
+            </div>
+
+            <div className="order-1 lg:order-2 space-y-6 text-left">
+              <span className="bg-purple-500/20 text-purple-400 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full border border-purple-500/30 inline-block shadow">
+                🏋️ Edición Fitness Especializada
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-black text-white leading-tight">
+                QuantikaPOS <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Control Total de Gimnasios</span>
+              </h2>
+              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                Una plataforma diseñada específicamente para centros de acondicionamiento físico, integrando control administrativo, membresías y salud deportiva:
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300 pt-2">
+                <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <span className="text-purple-400 font-bold">✓</span> Control de Acceso por QR
+                </div>
+                <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <span className="text-purple-400 font-bold">✓</span> Evaluación Antropométrica
+                </div>
+                <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <span className="text-purple-400 font-bold">✓</span> Cálculo de Edad Metabólica
+                </div>
+                <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <span className="text-purple-400 font-bold">✓</span> Guías de Porciones (Guatemala)
+                </div>
+                <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <span className="text-purple-400 font-bold">✓</span> Registro de Invitados/Cortesías
+                </div>
+                <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <span className="text-purple-400 font-bold">✓</span> Clases Fijas y Especiales
+                </div>
+              </div>
+
+              <div className="pt-4">
+                <a 
+                  href="#contacto" 
+                  onClick={() => setFormData(prev => ({ ...prev, service: 'QuantikaPOS • Gimnasios' }))}
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold px-6 py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-purple-600/30 transition-all inline-block"
+                >
+                  Cotizar QuantikaPOS Gimnasios →
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECCIÓN DETALLADA 3: MARKETGUATE.NET */}
+      <section id="sistema-marketguate" className="max-w-7xl mx-auto w-full px-4 py-16 border-t border-slate-800/80 relative z-10 scroll-mt-28">
+        <div className="bg-gradient-to-br from-[#0b101d] via-[#0d1e1c] to-[#030712] border border-emerald-500/30 rounded-3xl p-6 sm:p-12 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 blur-[130px] rounded-full pointer-events-none"></div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center relative z-10">
+            <div className="space-y-6 text-left">
+              <span className="bg-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full border border-emerald-500/30 inline-block shadow">
+                🛒 Vitrina E-commerce Oficial
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-black text-white leading-tight">
+                MarketGuate.net <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Directorio y Vitrina Comercial</span>
+              </h2>
+              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                La plataforma de comercio digital en Guatemala diseñada para conectar negocios locales con miles de clientes potenciales. Obtén visibilidad instantánea con nuestro Bono Plus.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300 pt-2">
+                <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span> Directorio Comercial Activo
+                </div>
+                <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span> Posicionamiento Web Local
+                </div>
+                <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span> Enlace Directo a WhatsApp
+                </div>
+                <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span> Integrado como Bono Plus
+                </div>
+              </div>
+
+              <div className="pt-4 flex flex-wrap gap-4">
+                <a 
+                  href="https://www.marketguate.net" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold px-6 py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-emerald-600/30 transition-all inline-block"
+                >
+                  Visitar MarketGuate.net 🌐
+                </a>
+                <a 
+                  href="#contacto" 
+                  onClick={() => setFormData(prev => ({ ...prev, service: 'MarketGuate.net' }))}
+                  className="bg-slate-900 hover:bg-slate-800 text-slate-200 font-bold px-6 py-3.5 rounded-xl text-xs uppercase tracking-wider border border-slate-700 transition-all shadow"
+                >
+                  Solicitar Bono Plus
+                </a>
+              </div>
+            </div>
+
+            <div className="relative rounded-2xl overflow-hidden border border-slate-700/80 bg-slate-900 shadow-2xl aspect-[4/3] flex items-center justify-center p-1 group">
+              <img src="/image_marketguate.png" alt="MarketGuate.net" className="w-full h-full object-cover object-top rounded-xl group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* BARRA DE STACK TECNOLÓGICO Y SEGURIDAD */}
       <section className="max-w-5xl mx-auto w-full px-4 py-4 relative z-10">
         <div className="bg-[#0b101d]/80 border border-slate-800/80 rounded-2xl p-4 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-[11px] font-mono text-slate-400 backdrop-blur-md shadow-lg">
           <div className="flex items-center gap-2">
@@ -609,41 +887,6 @@ export default function CodeNexaHome() {
         </div>
       </section>
 
-      {/* SECCIÓN: TIENDA MARKETGUATE.NET */}
-      <section id="marketguate" className="max-w-7xl mx-auto w-full px-4 py-16 border-t border-slate-800/80 relative z-10 scroll-mt-28">
-        <div className="bg-gradient-to-r from-[#0b101d] via-[#10192e] to-[#0b101d] border border-cyan-500/40 rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden backdrop-blur-xl">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 blur-[120px] rounded-full pointer-events-none"></div>
-          
-          <div className="max-w-3xl space-y-6 relative z-10">
-            <span className="bg-cyan-500/20 text-cyan-400 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full border border-cyan-500/30 inline-block shadow">
-              🛒 Bono Plus Exclusivo
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-white leading-tight">
-              Impulsa tu Negocio en <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">MarketGuate.net</span>
-            </h2>
-            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-              Al adquirir Quantika POS o nuestros servicios, puedes optar por nuestro **Bono Plus**, el cual incluye la publicación y difusión directa de tus productos o servicios en nuestra plataforma comercial oficial de Guatemala.
-            </p>
-            <div className="flex flex-wrap gap-4 pt-4">
-              <a 
-                href="https://www.marketguate.net" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold px-6 py-3.5 rounded-2xl text-xs sm:text-sm uppercase tracking-wider shadow-xl shadow-cyan-600/30 transition-all flex items-center gap-2"
-              >
-                <span>🌐</span> Visitar MarketGuate.net →
-              </a>
-              <a 
-                href="#contacto" 
-                className="bg-slate-900 hover:bg-slate-800 text-slate-200 font-bold px-6 py-3.5 rounded-2xl text-xs sm:text-sm uppercase tracking-wider border border-slate-700 transition-all shadow"
-              >
-                Solicitar Bono Plus
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CONSULTORÍA TI */}
       <section id="consultoria" className="max-w-7xl mx-auto w-full px-4 py-16 border-t border-slate-800/80 relative z-10 scroll-mt-28">
         <div className="text-center max-w-3xl mx-auto mb-12">
@@ -816,7 +1059,7 @@ export default function CodeNexaHome() {
         </div>
       </section>
 
-      {/* SECCIÓN DE TESTIMONIOS Y CASOS DE ÉXITO (NUEVO) */}
+      {/* SECCIÓN DE TESTIMONIOS Y CASOS DE ÉXITO */}
       <section id="testimonios" className="max-w-7xl mx-auto w-full px-4 py-16 border-t border-slate-800/80 relative z-10 scroll-mt-28">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-4 py-1.5 rounded-full border border-cyan-500/20 inline-block mb-3 shadow-sm">
@@ -840,7 +1083,7 @@ export default function CodeNexaHome() {
         </div>
       </section>
 
-      {/* SECCIÓN DE PREGUNTAS FRECUENTES (FAQ) INTERACTIVA (NUEVO) */}
+      {/* SECCIÓN DE PREGUNTAS FRECUENTES (FAQ) INTERACTIVA */}
       <section id="faq" className="max-w-4xl mx-auto w-full px-4 py-16 border-t border-slate-800/80 relative z-10 scroll-mt-28">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <span className="text-xs font-bold text-blue-400 uppercase tracking-widest bg-blue-500/10 px-4 py-1.5 rounded-full border border-blue-500/20 inline-block mb-3 shadow-sm">
@@ -881,7 +1124,9 @@ export default function CodeNexaHome() {
               <input type="text" required placeholder="Nombre completo" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-[#030712] border border-slate-700 rounded-xl px-4 py-3.5 text-white outline-none focus:border-cyan-500 transition-colors" />
               <input type="email" required placeholder="Correo electrónico" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full bg-[#030712] border border-slate-700 rounded-xl px-4 py-3.5 text-white outline-none focus:border-cyan-500 transition-colors" />
               <select value={formData.service} onChange={e => setFormData({...formData, service: e.target.value})} className="w-full bg-[#030712] border border-slate-700 rounded-xl px-4 py-3.5 text-white outline-none focus:border-cyan-500 transition-colors">
-                <option value="Quantika POS">Quantika POS (Sistema de Ventas)</option>
+                <option value="Quantika POS">Quantika POS (Sistema de Ventas y Gestión)</option>
+                <option value="QuantikaPOS • Gimnasios">QuantikaPOS • Gimnasios (Control y Nutrición)</option>
+                <option value="MarketGuate.net">MarketGuate.net (Vitrina Comercial)</option>
                 <option value="Consultoria TI">Consultoría TI / Ciberseguridad / Arquitectura</option>
                 <option value="SQL Server Nivel 1 (8:00 - 10:00 AM)">SQL Server Nivel 1 - Sábados 8:00 AM (Q600 - 2 meses)</option>
                 <option value="Programación Nivel 1 (10:30 - 12:30 PM)">Programación Nivel 1 - Sábados 10:30 AM (Q600 - 2 meses)</option>
