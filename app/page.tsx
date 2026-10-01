@@ -10,8 +10,9 @@ export default function CodeNexaHome() {
   // Estado para el Carrusel / Banner Animado de Herramientas Principales
   const [activeToolSlide, setActiveToolSlide] = useState(0)
   
-  // Estado para la captura seleccionada en la galería interactiva de Quantika POS
-  const [activeScreen, setActiveScreen] = useState(0)
+  // Estados para la Galería Interactiva Moderna por Pestañas de Herramientas
+  const [selectedGalleryTool, setSelectedGalleryTool] = useState(0)
+  const [activeModuleIdx, setActiveModuleIdx] = useState(0)
 
   // Estado para el Lightbox (imagen en grande)
   const [modalImage, setModalImage] = useState<{ title: string; image: string } | null>(null)
@@ -50,7 +51,7 @@ export default function CodeNexaHome() {
       badge: "EDICIÓN FITNESS",
       title: "QuantikaPOS • Gimnasios",
       subtitle: "Control Total y Salud Metabólica",
-      desc: "Inscripciones con vigencias, control de acceso por código QR, control clínico de nutrición y antropometría con cálculo de edad metabólica y guías de porciones, control de invitados de cortesía y clases recurrentes.",
+      desc: "Inscripciones con vigencias, control de acceso por código QR, control clínico de nutrición y antropometría con cálculo de edad metabólica, control de ingresos y egresos, rutinas y guías de porciones.",
       ctaText: "Ver Módulos de Gimnasio",
       image: "/image_b3a918.png",
       accent: "from-purple-600/30 to-indigo-600/20 border-purple-500/50 text-purple-400"
@@ -59,12 +60,53 @@ export default function CodeNexaHome() {
       badge: "VITRINA COMERCIAL",
       title: "MarketGuate.net",
       subtitle: "Plataforma de E-commerce y Directorio",
-      desc: "El espacio digital exclusivo para posicionar y difundir los productos y servicios de tu negocio en toda Guatemala, integrado como Bono Plus con nuestras soluciones corporativas.",
+      desc: "Vitrina digital exclusiva para visualizar productos, recibir pedidos online, seguimiento de órdenes y contacto directo para potenciar tu negocio en toda Guatemala.",
       ctaText: "Visitar MarketGuate",
       image: "/image_marketguate.png",
       accent: "from-emerald-600/30 to-teal-600/20 border-emerald-500/50 text-emerald-400"
     }
   ]
+
+  // Definición de las 3 herramientas con sus respectivos módulos modernos para la Galería (Actualizado)
+  const toolsGalleries = [
+    {
+      category: "QuantikaPOS • Empresarial",
+      badgeColor: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
+      modules: [
+        { title: "Acceso Seguro (Login)", desc: "Autenticación cifrada para usuarios y roles autorizados por sucursal.", image: "/image_8ac8c8.png" },
+        { title: "Panel Principal del Negocio", desc: "Control gerencial de sucursales, personal, categorías y finanzas.", image: "/image_8acc6b.png" },
+        { title: "Punto de Venta Móvil (POS)", desc: "Interfaz táctil optimizada para cobros rápidos y control de stock.", image: "/image_8acd3d.jpg" },
+        { title: "Estadísticas y Reportes", desc: "Gráficos detallados de ventas mensuales y tendencias de ingresos.", image: "/image_8ac960.png" },
+        { title: "Cuentas por Cobrar y Pagar", desc: "Control detallado de créditos de clientes y saldos pendientes a proveedores.", image: "/image_8accc9.png" },
+        { title: "Módulo de Traslados", desc: "Consulta de stock en otras tiendas y traslados unificados.", image: "/modulo_traslados.png" }
+      ]
+    },
+    {
+      category: "QuantikaPOS • Gimnasios",
+      badgeColor: "bg-purple-500/20 text-purple-400 border-purple-500/30",
+      modules: [
+        { title: "Panel de Administración Fitness", desc: "Control general de accesos, socios, nutrición y clases.", image: "/image_b3a918.png" },
+        { title: "Inscripciones y Planes", desc: "Registra nuevos socios, planifica membresías y emite carnets QR.", image: "/image_inscripciones.png" },
+        { title: "Control de Ingresos y Egresos", desc: "Gestión financiera detallada de entradas por membresías y salidas operativas.", image: "/image_control.png" },
+        { title: "Control de Seguimientos de Nutrición", desc: "Evalúa antropometría, composición corporal y planes de alimentación.", image: "/image_nutricion.png" },
+        { title: "Rutinas", desc: "Diseño y asignación de rutinas de entrenamiento personalizadas para cada socio.", image: "/image_rutina.png" }
+      ]
+    },
+    {
+      category: "MarketGuate.net",
+      badgeColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+      modules: [
+        { title: "Vitrina E-commerce Oficial", desc: "Plataforma de exposición y directorio comercial en Guatemala.", image: "/image_marketguate.png" },
+        { title: "Visualización de tus productos", desc: "Exhibe tu catálogo de artículos con imágenes de alta calidad, descripciones y precios actualizados.", image: "/image_productos_web.png" },
+        { title: "Pedidos Online", desc: "Permite a tus clientes realizar compras de forma directa y rápida desde la plataforma web.", image: "/image_pedido_web.png" },
+        { title: "Seguimiento de Pedidos", desc: "Monitorea el estatus de cada orden en tiempo real, desde la confirmación hasta la entrega.", image: "/image_seguimiento_pedido.png" },
+        { title: "Contactos", desc: "Canales directos de comunicación y enlaces de mensajería para atención inmediata al cliente.", image: "/image_marketguate.png" }
+      ]
+    }
+  ]
+
+  const activeGalleryToolObj = toolsGalleries[selectedGalleryTool]
+  const activeModuleObj = activeGalleryToolObj.modules[activeModuleIdx] || activeGalleryToolObj.modules[0]
 
   const teaserScenesList = [
     {
@@ -79,7 +121,7 @@ export default function CodeNexaHome() {
       title: "Panel de Administración del Negocio",
       desc: "Control centralizado de sucursales, personal, categorías, inventario y cuentas financieras.",
       image: "/image_8acc6b.png",
-      accent: "from-cyan-600/30 to-emerald-500/20 border-emerald-500/50 text-emerald-400"
+      accent: "from-cyan-600/30 to-emerald-500/20 border-cyan-500/50 text-cyan-400"
     },
     {
       tag: "PUNTO DE VENTA",
@@ -212,30 +254,12 @@ export default function CodeNexaHome() {
   ]
 
   const consultingCatalog = [
-    { icon: "☁️️", title: "Migraciones On-Premise a Cloud", desc: "Estrategias de transición seguras hacia infraestructuras en la nube, optimizando costos y disponibilidad." },
+    { icon: "☁", title: "Migraciones On-Premise a Cloud", desc: "Estrategias de transición seguras hacia infraestructuras en la nube, optimizando costos y disponibilidad." },
     { icon: "🛡️", title: "Ciberseguridad & Hardening", desc: "Auditorías de infraestructura, endurecimiento de servidores, pentesting y protección de APIs corporativas." },
     { icon: "🗄️", title: "Arquitecturas y Bases de Datos", desc: "Diseño y optimización de motores de misión crítica (SQL Server, MongoDB, PostgreSQL) de alto rendimiento." },
     { icon: "📈", title: "Gestión de Proyectos TI", desc: "Dirección técnica y administrativa bajo estándares rigurosos de control y mitigación de riesgos." },
     { icon: "🔄", title: "Metodologías Ágiles (Scrum/Kanban)", desc: "Implementación de marcos ágiles para acelerar ciclos de entrega y maximizar el valor de negocio." },
     { icon: "💡", title: "Cultura Tecnológica y Gobierno", desc: "Asesoría ejecutiva para alinear la tecnología con los objetivos estratégicos de la organización." }
-  ]
-
-  const posScreens = [
-    { title: "Acceso Seguro (Login)", desc: "Autenticación cifrada para usuarios y roles autorizados por sucursal.", image: "/image_8ac8c8.png" },
-    { title: "Panel Principal del Negocio", desc: "Control gerencial de sucursales, personal, categorías y finanzas.", image: "/image_8acc6b.png" },
-    { title: "Punto de Venta Móvil (POS)", desc: "Interfaz táctil optimizada para cobros rápidos y control de stock.", image: "/image_8acd3d.jpg" },
-    { title: "Gestión de Sucursales", desc: "Configuración de localidades activas y límites de compras al crédito.", image: "/image_8acca3.png" },
-    { title: "Estadísticas y Reportes", desc: "Gráficos detallados de ventas mensuales y tendencias de ingresos.", image: "/image_8ac960.png" },
-    { title: "Métodos de Pago", desc: "Distribución de ingresos por efectivo, tarjeta, crédito y contado.", image: "/image_8ac97f.png" },
-    { title: "Cuentas por Cobrar", desc: "Control detallado de créditos de clientes y saldos pendientes.", image: "/image_8accc9.png" },
-    { title: "Cuentas por Pagar", desc: "Auditoría de deudas pendientes y compras al crédito a proveedores.", image: "/image_8acd01.png" },
-    { title: "Alertas de Stock Mínimo", desc: "Avisos visuales automáticos en existencias críticas.", image: "/pos_stock_bajo.png" },
-    { title: "Gestión de Cotizaciones", desc: "Control de proformas y re-impresión directa.", image: "/pos_gestion_cotizaciones.png" },
-    { title: "Vista Previa PDF", desc: "Formato profesional impreso con datos de la empresa.", image: "/pos_cotizacion_pdf.png" },
-    { title: "Pedidos y Agenda", desc: "Módulo de bodega para fechas de entrega y notas.", image: "/pos_pedidos_agenda.png" },
-    { title: "Administración de Inventario", desc: "Control de existencias y movimientos de mercancía.", image: "/pos_inventario.png" },
-    { title: "Proveedores y Compras", desc: "Directorio corporativo y entradas de inventario.", image: "/pos_compras_proveedores.png" },
-    { title: "Módulo de Traslados", desc: "Consulta de stock en otras tiendas y traslados unificados.", image: "/modulo_traslados.png" }
   ]
 
   const testimonialsList = [
@@ -304,7 +328,7 @@ export default function CodeNexaHome() {
             <a href="#sistema-gimnasios" className="hover:text-cyan-400 transition-colors">Gimnasios</a>
             <a href="#sistema-marketguate" className="hover:text-cyan-400 transition-colors">MarketGuate</a>
             <a href="#teaser" className="hover:text-cyan-400 transition-colors">Spot</a>
-            <a href="#galeria" className="hover:text-cyan-400 transition-colors">POS</a>
+            <a href="#galeria" className="hover:text-cyan-400 transition-colors">Galería</a>
             <a href="#consultoria" className="hover:text-cyan-400 transition-colors">Consultoría</a>
             <a href="#academia" className="hover:text-cyan-400 transition-colors font-bold text-purple-300">Academy</a>
             <a href="#testimonios" className="hover:text-cyan-400 transition-colors">Testimonios</a>
@@ -374,7 +398,7 @@ export default function CodeNexaHome() {
           <a href="#sistema-gimnasios" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-2 border-b border-slate-800/60">🏋️ QuantikaPOS Gimnasios</a>
           <a href="#sistema-marketguate" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-2 border-b border-slate-800/60">🛒 MarketGuate.net</a>
           <a href="#teaser" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-2 border-b border-slate-800/60">🎬 Spot Animado con Voz</a>
-          <a href="#galeria" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-2 border-b border-slate-800/60">📱 Pantallas Reales de Quantika POS</a>
+          <a href="#galeria" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-2 border-b border-slate-800/60">📱 Galería Interactiva Moderna</a>
           <a href="#consultoria" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-2 border-b border-slate-800/60">💼 Consultoría TI y Ciberseguridad</a>
           <a href="#academia" onClick={() => setMobileMenuOpen(false)} className="text-purple-300 hover:text-purple-400 py-2 border-b border-slate-800/60">🎓 CodeNexa Academy</a>
           <a href="#testimonios" onClick={() => setMobileMenuOpen(false)} className="text-slate-200 hover:text-cyan-400 py-2 border-b border-slate-800/60">⭐ Testimonios</a>
@@ -581,7 +605,7 @@ export default function CodeNexaHome() {
                 QuantikaPOS <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Control Total de Gimnasios</span>
               </h2>
               <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-                Una plataforma diseñada específicamente para centros de acondicionamiento físico, integrando control administrativo, membresías y salud deportiva:
+                Una plataforma diseñada específicamente para centros de acondicionamiento físico, integrando control administrativo, membresías, finanzas y salud deportiva:
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300 pt-2">
@@ -589,13 +613,13 @@ export default function CodeNexaHome() {
                   <span className="text-purple-400 font-bold">✓</span> Control de Acceso por QR
                 </div>
                 <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
-                  <span className="text-purple-400 font-bold">✓</span> Evaluación Antropométrica
+                  <span className="text-purple-400 font-bold">✓</span> Control de Ingresos y Egresos
                 </div>
                 <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
-                  <span className="text-purple-400 font-bold">✓</span> Cálculo de Edad Metabólica
+                  <span className="text-purple-400 font-bold">✓</span> Seguimientos de Nutrición
                 </div>
                 <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
-                  <span className="text-purple-400 font-bold">✓</span> Guías de Porciones (Guatemala)
+                  <span className="text-purple-400 font-bold">✓</span> Rutinas de Entrenamiento
                 </div>
                 <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
                   <span className="text-purple-400 font-bold">✓</span> Registro de Invitados/Cortesías
@@ -633,21 +657,21 @@ export default function CodeNexaHome() {
                 MarketGuate.net <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Directorio y Vitrina Comercial</span>
               </h2>
               <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-                La plataforma de comercio digital en Guatemala diseñada para conectar negocios locales con miles de clientes potenciales. Obtén visibilidad instantánea con nuestro Bono Plus.
+                La plataforma de comercio digital en Guatemala diseñada para conectar negocios locales con miles de clientes potenciales. Visualiza productos, recibe pedidos online y haz seguimiento en tiempo real.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300 pt-2">
                 <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
-                  <span className="text-emerald-400 font-bold">✓</span> Directorio Comercial Activo
+                  <span className="text-emerald-400 font-bold">✓</span> Visualización de Productos
                 </div>
                 <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
-                  <span className="text-emerald-400 font-bold">✓</span> Posicionamiento Web Local
+                  <span className="text-emerald-400 font-bold">✓</span> Pedidos Online
                 </div>
                 <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
-                  <span className="text-emerald-400 font-bold">✓</span> Enlace Directo a WhatsApp
+                  <span className="text-emerald-400 font-bold">✓</span> Seguimiento de Pedidos
                 </div>
                 <div className="bg-[#030712]/70 p-3 rounded-xl border border-slate-800 flex items-center gap-2">
-                  <span className="text-emerald-400 font-bold">✓</span> Integrado como Bono Plus
+                  <span className="text-emerald-400 font-bold">✓</span> Canales de Contacto Directo
                 </div>
               </div>
 
@@ -805,43 +829,89 @@ export default function CodeNexaHome() {
         </div>
       </section>
 
-      {/* GALERÍA DE PANTALLAS REALES */}
+      {/* GALERÍA INTERACTIVA MODERNA POR PESTAÑAS */}
       <section id="galeria" className="max-w-7xl mx-auto w-full px-4 py-16 border-t border-slate-800/80 relative z-10 scroll-mt-28">
         <div className="text-center max-w-2xl mx-auto mb-10">
           <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-4 py-1.5 rounded-full border border-cyan-500/20 inline-block mb-3 shadow-sm">
-            Galería Interactiva
+            Galería Interactiva Moderna
           </span>
-          <h2 className="text-3xl font-extrabold text-white">Explora Todas las Pantallas de Quantika POS</h2>
-          <p className="text-slate-400 text-xs sm:text-sm mt-2">Navega por cada módulo del sistema operativo empresarial y descubre su interfaz profesional.</p>
+          <h2 className="text-3xl font-extrabold text-white">Explora el Ecosistema CodeNexa</h2>
+          <p className="text-slate-400 text-xs sm:text-sm mt-2">Selecciona una herramienta y descubre el poder visual de nuestras soluciones corporativas y comerciales.</p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-2 mb-8 max-w-5xl mx-auto">
-          {posScreens.map((screen, idx) => (
+        {/* Pestañas Superiores Modernas para elegir la Herramienta */}
+        <div className="flex flex-wrap justify-center gap-3 mb-10">
+          {toolsGalleries.map((tool, idx) => (
             <button
               key={idx}
-              onClick={() => setActiveScreen(idx)}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold border transition-all ${activeScreen === idx ? 'bg-cyan-600 text-white border-cyan-400 shadow-lg shadow-cyan-600/30' : 'bg-[#0b101d] text-slate-300 border-slate-800 hover:border-slate-700'}`}
+              onClick={() => { setSelectedGalleryTool(idx); setActiveModuleIdx(0); }}
+              className={`px-6 py-3 rounded-2xl text-xs sm:text-sm font-black transition-all border flex items-center gap-2.5 ${selectedGalleryTool === idx ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white border-cyan-400 shadow-xl shadow-cyan-600/30 scale-105' : 'bg-[#0b101d] text-slate-300 border-slate-800 hover:border-slate-700'}`}
             >
-              {screen.title}
+              <span>{idx === 0 ? '💼' : idx === 1 ? '🏋️' : '🛒'}</span>
+              <span>{tool.category}</span>
             </button>
           ))}
         </div>
 
-        <div className="bg-[#0b101d] border border-slate-800 rounded-3xl p-6 sm:p-10 max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-8 shadow-2xl backdrop-blur-xl">
-          <div className="w-full md:w-1/2 space-y-4">
-            <span className="text-[10px] bg-cyan-500/20 text-cyan-400 px-3 py-1 rounded-full font-bold uppercase border border-cyan-500/30">Módulo #{activeScreen + 1} de {posScreens.length}</span>
-            <h3 className="text-2xl font-black text-white">{posScreens[activeScreen].title}</h3>
-            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">{posScreens[activeScreen].desc}</p>
-            <button onClick={() => setModalImage({ title: posScreens[activeScreen].title, image: posScreens[activeScreen].image })} className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold px-5 py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg shadow-cyan-600/20 flex items-center gap-2">
-              <span>🔍</span> Ver Imagen en Grande
-            </button>
-          </div>
-          <div className="w-full md:w-1/2 bg-[#030712] border border-slate-800 rounded-2xl p-2.5 aspect-[4/3] flex items-center justify-center overflow-hidden cursor-pointer group relative shadow-inner" onClick={() => setModalImage({ title: posScreens[activeScreen].title, image: posScreens[activeScreen].image })}>
-            <img src={posScreens[activeScreen].image} alt={posScreens[activeScreen].title} className="w-full h-full object-cover object-top rounded-xl group-hover:scale-105 transition-transform duration-500" />
-            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold backdrop-blur-xs">
-              🔍 Clic para Ampliar
+        {/* Contenedor Principal Estilo Tarjeta Moderna */}
+        <div className="bg-[#0b101d] border border-slate-800 rounded-3xl p-6 sm:p-10 max-w-5xl mx-auto shadow-2xl backdrop-blur-xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          {/* Columna Izquierda: Lista limpia de módulos de la herramienta seleccionada */}
+          <div className="lg:col-span-5 space-y-3">
+            <span className={`text-[10px] px-3.5 py-1 rounded-full font-extrabold uppercase border inline-block ${activeGalleryToolObj.badgeColor}`}>
+              {activeGalleryToolObj.category}
+            </span>
+            <h3 className="text-xl font-black text-white">{activeModuleObj.title}</h3>
+            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed pb-2">{activeModuleObj.desc}</p>
+            
+            <div className="space-y-2 pt-2 border-t border-slate-800/80">
+              <span className="text-[11px] font-bold text-slate-400 block uppercase tracking-wider mb-2">Módulos Disponibles:</span>
+              {activeGalleryToolObj.modules.map((mod, mIdx) => (
+                <button
+                  key={mIdx}
+                  onClick={() => setActiveModuleIdx(mIdx)}
+                  className={`w-full text-left px-4 py-3 rounded-xl text-xs font-bold transition-all border flex items-center justify-between ${activeModuleIdx === mIdx ? 'bg-cyan-950/40 text-cyan-300 border-cyan-500/50 shadow' : 'bg-[#030712] text-slate-400 border-slate-800 hover:text-white hover:border-slate-700'}`}
+                >
+                  <span>{mod.title}</span>
+                  <span className="text-xs">{activeModuleIdx === mIdx ? '▶' : '•'}</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="pt-2">
+              <button 
+                onClick={() => setModalImage({ title: activeModuleObj.title, image: activeModuleObj.image })} 
+                className="w-full bg-slate-900 hover:bg-slate-800 text-cyan-400 border border-slate-700 font-bold px-4 py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow flex items-center justify-center gap-2"
+              >
+                <span>🔍</span> Ver Imagen en Grande
+              </button>
             </div>
           </div>
+
+          {/* Columna Derecha: Visualizador Estilo Ventana de Sistema */}
+          <div className="lg:col-span-7 bg-[#030712] border border-slate-800 rounded-2xl p-2.5 shadow-inner flex flex-col">
+            {/* Barra superior estilo ventana */}
+            <div className="bg-[#1e293b]/60 px-4 py-2.5 rounded-t-xl flex items-center justify-between border-b border-slate-800/80 mb-2">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+              </div>
+              <span className="text-[10px] font-mono text-slate-400">{activeModuleObj.title}</span>
+              <div className="w-10"></div>
+            </div>
+
+            <div 
+              className="relative rounded-xl overflow-hidden border border-slate-800 aspect-[16/10] flex items-center justify-center group bg-slate-900 cursor-pointer"
+              onClick={() => setModalImage({ title: activeModuleObj.title, image: activeModuleObj.image })}
+            >
+              <img src={activeModuleObj.image} alt={activeModuleObj.title} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold backdrop-blur-xs">
+                🔍 Clic para Ampliar
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -851,7 +921,7 @@ export default function CodeNexaHome() {
           <div className="relative max-w-5xl w-full bg-[#0b101d] border border-slate-700 rounded-3xl overflow-hidden shadow-2xl flex flex-col" onClick={e => e.stopPropagation()}>
             <div className="bg-[#030712] px-6 py-4 border-b border-slate-800 flex justify-between items-center">
               <div>
-                <span className="text-[10px] text-cyan-400 font-extrabold uppercase tracking-widest block">Quantika POS • Vista Detallada</span>
+                <span className="text-[10px] text-cyan-400 font-extrabold uppercase tracking-widest block">CodeNexa • Vista Detallada</span>
                 <h3 className="text-sm sm:text-lg font-black text-white">{modalImage.title}</h3>
               </div>
               <button onClick={() => setModalImage(null)} className="bg-slate-800 hover:bg-slate-700 text-white w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm transition-colors">✕</button>
@@ -1001,7 +1071,7 @@ export default function CodeNexaHome() {
               <div className="bg-amber-950/30 border border-amber-500/30 p-2.5 rounded-xl my-3 text-[11px] text-amber-300 font-semibold space-y-1">
                 <div className="text-amber-200 text-center font-bold">🟢 Nivel 1 (Habilitado)</div>
                 <div className="text-center text-white bg-amber-900/50 py-1 rounded">⏰ Sábados 2:30 PM - 4:30 PM</div>
-                <div className="flex justify-between pt-1 border-t border-amber-500/20"><span>⏱️ 2 meses</span><span>💰 Q600</span></div>
+                <div className="flex justify-between pt-1 border-t border-amber-500/20"><span>⏱️️ 2 meses</span><span>💰 Q600</span></div>
               </div>
 
               <div className="space-y-3 text-xs text-slate-300 border-t border-slate-800 pt-3">
